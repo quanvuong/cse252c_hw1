@@ -6,3 +6,6 @@ src/build*
 .vscode
 pyviso
 pyviso/src
+
+dataset
+dataset/*
