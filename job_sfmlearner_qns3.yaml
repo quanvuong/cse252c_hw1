@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: quan-sfm-qns3
+  namespace: ucsd-haosulab
+  labels:
+    user: quan  # Specify your name
+spec:
+  ttlSecondsAfterFinished: 86400  # Wait one day to delete completed jobs
+  template:
+    spec:
+      containers:
+      - name: gpu-container
+        image: quanhovuong/252c:hw1_v2  # docker image
+        # imagePullPolicy: Always
+        command:
+        - "sh"
+        - "-c"
+        args:
+        - "sleep infinity"
+        resources:
+          requests:
+            cpu: "30"
+            memory: "30Gi"
+            nvidia.com/gpu: 4
+          limits:
+            cpu: "30"
+            memory: "40Gi"
+            nvidia.com/gpu: 4
+        volumeMounts:
+          - name: cephfs
+            mountPath: /cephfs
+          - name: dshm
+            mountPath: /dev/shm
+      volumes:
+      - name: dshm  # shared memory
+        emptyDir:
+          medium: Memory
+      - name: cephfs
+        persistentVolumeClaim:
+          claimName: haosulab-cephfs
+      restartPolicy: Never
+  backoffLimit: 2
+
+
+  # command for training
+          # - "cd /cephfs/quan/252c/SfmLearner-Pytorch-qns3 && /opt/conda/bin/python train.py /cephfs/quan/252c/dataset/sfmlearner_h128w416 -b4 -m0.2 -s0.1 --epoch-size 3000 --sequence-length 3 --log-output "
