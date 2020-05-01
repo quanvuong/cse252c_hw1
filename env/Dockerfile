@@ -6,3 +6,6 @@ COPY ./sfm_requirements.txt /tmp/sfm_requirements.txt
 
 RUN pip install -r /tmp/requirements.txt
 RUN pip install -r /tmp/sfm_requirements.txt
+
+RUN apt-get update
+RUN apt-get install -y screen
