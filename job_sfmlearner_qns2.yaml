@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: quan-sfm
+  name: quan-sfm-qns2
   namespace: ucsd-haosulab
   labels:
     user: quan  # Specify your name
@@ -11,22 +11,23 @@ spec:
     spec:
       containers:
       - name: gpu-container
-        image: quanhovuong/252c:hw1_v1  # docker image
+        image: quanhovuong/252c:hw1_v2  # docker image
         # imagePullPolicy: Always
         command:
         - "sh"
         - "-c"
         args:
         - "sleep infinity"
+        # - "cd /cephfs/quan/252c/cse252c_hw1/SfmLearner-Pytorch && /opt/conda/bin/python train.py ../../dataset/sfmlearner_h128w416 -b4 -m0.2 -s0.1 --epoch-size 3000 --sequence-length 3 --log-output "
         resources:
           requests:
-            cpu: "20"
+            cpu: "30"
             memory: "30Gi"
-            nvidia.com/gpu: 3
+            nvidia.com/gpu: 4
           limits:
-            cpu: "20"
+            cpu: "30"
             memory: "40Gi"
-            nvidia.com/gpu: 3
+            nvidia.com/gpu: 4
         volumeMounts:
           - name: cephfs
             mountPath: /cephfs
