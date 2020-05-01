@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: quan-sfm
+  namespace: ucsd-haosulab
+  labels:
+    user: quan  # Specify your name
+spec:
+  ttlSecondsAfterFinished: 86400  # Wait one day to delete completed jobs
+  template:
+    spec:
+      containers:
+      - name: gpu-container
+        image: quanhovuong/252c:hw1_v1  # docker image
+        # imagePullPolicy: Always
+        command:
+        - "sh"
+        - "-c"
+        args:
+        - "sleep infinity"
+        resources:
+          requests:
+            cpu: "20"
+            memory: "30Gi"
+            nvidia.com/gpu: 3
+          limits:
+            cpu: "20"
+            memory: "40Gi"
+            nvidia.com/gpu: 3
+        volumeMounts:
+          - name: cephfs
+            mountPath: /cephfs
+          - name: dshm
+            mountPath: /dev/shm
+      volumes:
+      - name: dshm  # shared memory
+        emptyDir:
+          medium: Memory
+      - name: cephfs
+        persistentVolumeClaim:
+          claimName: haosulab-cephfs
+      restartPolicy: Never
+  backoffLimit: 2
