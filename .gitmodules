@@ -1,3 +1,6 @@
 [submodule "SfmLearner-Pytorch"]
 	path = SfmLearner-Pytorch
 	url = https://github.com/ClementPinard/SfmLearner-Pytorch
+[submodule "SfmLearner-Pytorch-qns3"]
+	path = SfmLearner-Pytorch-qns3
+	url = git@github.com:quanvuong/SfmLearner-Pytorch.git
