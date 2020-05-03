@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quan-tb
+  labels:
+    k8s-app: tensorboard
+    user: quan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: tensorboard
+  template:
+    metadata:
+      labels:
+        k8s-app: tensorboard
+    spec:
+      containers:
+      - name: tensorboard
+        command: ["/bin/sh", "-c"]
+        args: ["tensorboard --logdir /cephfs/quan/252c/cse252c_hw1/SfmLearner-Pytorch/checkpoints/sfmlearner_h128w416,epoch_size3000,m0.2/05-01-22:09"]
+        image: tensorflow/tensorflow
+        # ports:
+        # - containerPort: 6006
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+          limits:
+            cpu: "1"
+            memory: "4Gi"
+        volumeMounts:
+        - name: cephfs
+          mountPath: /cephfs
+      volumes:
+      - name: cephfs
+        persistentVolumeClaim:
+          claimName: haosulab-cephfs
+      
+
+# Command to view tensorboard locally
+# kubectl port-forward pod/quan-tb-76c9798d4f-rpmlh 6007
+# Taken from https://kubectl.docs.kubernetes.io/pages/container_debugging/port_forward_to_pods.html
